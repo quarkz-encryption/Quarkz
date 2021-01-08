@@ -1,6 +1,11 @@
+#!/usr/bin/env python3
 import random
 from Crypto.Util import number
 from Crypto.PublicKey import RSA
+# from KeyGenerator import KeyGenerator
+# from Decrypt import Decrypt
+# from Encrypt import Encrypt
+# from ModificationKey import ModificationKey
 
 x = random.randint(4, 8)
 p = number.getPrime(x)
@@ -33,7 +38,7 @@ word = []
 word_full = []
 m = input("enter text: ") # raw_input for python 2
 
-print ("THIS IS E: " + str(e))
+# print ("THIS IS E: " + str(e))
 
 rounds = random.randint(20, 200)
 
@@ -57,8 +62,8 @@ for i in m:
             t = (n ** tit)
     ox = o + 1
     tx = t + 1
-    print ("THIS IS O (GENERATED FROM N) FOR THE BELOW CIPHERTEXT: " + str(o))
-    print ("THIS IS T (GENERATED FROM N) FOR THE BELOW CIPHERTEXT: "+ str(t))
+    # print ("THIS IS O (GENERATED FROM N) FOR THE BELOW CIPHERTEXT: " + str(o))
+    # print ("THIS IS T (GENERATED FROM N) FOR THE BELOW CIPHERTEXT: "+ str(t))
     check = random.randint(1,2)
     rounds_user = random.randint(100, 1000)
     c = mc
@@ -76,7 +81,7 @@ for i in m:
                 c = (c + t)
     c = (c % o) 
 #    print (c / 29)
-    print ("Cipher Text of " + i + ": " + str(c))
+    # print ("Cipher Text of " + i + ": " + str(c))
     cipher.append(c)
     #print (c % n)
     #print (mc % n)
