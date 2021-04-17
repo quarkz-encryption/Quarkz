@@ -7,5 +7,5 @@ class ModificationKey():
     def __init__(self):
         self.name = 'tavian'
 
-    def pri(self):
-        print (self.name)
+    def pri(self)
+        print (self.name) 
