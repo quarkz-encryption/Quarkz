@@ -6,14 +6,21 @@ key = get_random_bytes(16)
 
 cipher = AES.new(key, AES.MODE_ECB)
 
-def quark(base, sub, add):
+def quark(base, add, sub):
     count = 0
-    while base - sub > 0:
-        base -= sub
-        print (base)
+    c = 0
+    while base + add < 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000:
         base += add
-    print ('base: ', base)
-    print ('count: ', count)
+        count += 1
+        c += 1
+        if c % 4 == 0:
+            base -= sub
+            count -= 1 
+        print ("base: ", base)
+        print ("count: ", count)
+        if count == 32:
+            return base
+            break
     return base
 
 n = 13493
@@ -25,19 +32,11 @@ s = m**e
 
 h = 23
 
-#if h%1024 > 512:
-#    h = h+512 
+o = (n*6*9)^h
 
-o = ((n**20)*100)^h
-print (o)
+t = (n*2*45)^h
 
-t = (n*2)^h
-
-#o = (n*8*9).to_bytes(16, 'big')
-
-#print ((n*8*9), int.from_bytes(o, 'big'))
-
-#o = int.from_bytes(cipher.encrypt(o), 'big')
+print ("o: ", o)
 
 y = (o%n)
 
@@ -45,10 +44,12 @@ c = math.floor(s / o)
 
 x = s%o
 
+print ("s: ", s)
+
 a = quark(s, o, t)
 
 #x = (x).to_bytes(16, 'big')
 
 #x = int.from_bytes(cipher.decrypt(x), 'big')
 
-print ("testing: ", (((a^h)**d)%n))
+print ("testing: ", (((a^(h*32))**d)%n))
