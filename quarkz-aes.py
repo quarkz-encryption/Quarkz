@@ -28,12 +28,12 @@ def modInverse(a, m):
 
 decimal.getcontext().prec=10000
 
-p = number.getPrime(512)
-q = number.getPrime(512)
+p = number.getPrime(4096)
+q = number.getPrime(4096)
 n = Decimal(p*q)
 phi = Decimal((p-1)*(q-1))
 while True:
-    e = Decimal(number.getPrime(10))
+    e = Decimal(number.getPrime(12))
     r = gcd(int(e), int(phi))
     if r == 1:
         break
