@@ -26,22 +26,21 @@ def modInverse(a, m):
         raise Exception('No modular inverse')
     return x%m
 
-decimal.getcontext().prec=1000
+decimal.getcontext().prec=10000
 
-p = number.getPrime(128)
-q = number.getPrime(128)
+p = number.getPrime(512)
+q = number.getPrime(512)
 n = Decimal(p*q)
 phi = Decimal((p-1)*(q-1))
 while True:
-    x = random.randint(4, 8)
-    e = Decimal(number.getPrime(x))
+    e = Decimal(number.getPrime(10))
     r = gcd(int(e), int(phi))
     if r == 1:
         break
 
 d = Decimal(modInverse(int(e), int(phi)))
 
-m = Decimal(1561230531)
+m = Decimal(24)
 
 s = m**e
 
@@ -93,6 +92,8 @@ c = pow(m, e, o)
 
 plain = pow((int(c)+int(priv)), int(d), int(n))
 print (c)
+print (s)
+print (o)
 print (plain)
 plain2 = pow((int(c)-int(priv)), int(d), int(n))
 
