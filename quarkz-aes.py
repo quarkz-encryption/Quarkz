@@ -28,24 +28,22 @@ def modInverse(a, m):
 
 decimal.getcontext().prec=10000
 
-p = number.getPrime(4096)
-q = number.getPrime(4096)
+p = number.getPrime(2048)
+q = number.getPrime(2048)
 n = Decimal(p*q)
 phi = Decimal((p-1)*(q-1))
+
 while True:
-    e = Decimal(number.getPrime(12))
+    e = Decimal(number.getPrime(11))
     r = gcd(int(e), int(phi))
     if r == 1:
         break
 
 d = Decimal(modInverse(int(e), int(phi)))
 
-m = Decimal(24)
+m = Decimal(27)
 
 s = m**e
-
-t = random.randint(1, 8000)
-
 
 k = n
 
@@ -59,7 +57,6 @@ ct_bytes = cipher.encrypt(kb)
 o = int.from_bytes(ct_bytes, "big")
 nonce = b64encode(cipher.nonce).decode('utf-8')
 ct = b64encode(ct_bytes).decode('utf-8')
-#    result = json.dumps({'nonce':nonce, 'ciphertext':ct})
 
 #o = k^t
 
@@ -75,26 +72,17 @@ else:
     diff = abs(k-o) % n
     pub = n/diff
 
-#    print ("pub: ", pub)
-#    print ("diff: ", diff)
-
 count = Decimal(int(s)//int(o))
-
-#    print("count: ", count)
 
 priv = round((Decimal(count)%Decimal(pub))*diff)
 
-#    print ("middle: ", count%pub)
-#    print ("priv: ", priv)
 c = pow(m, e, o)
 
-#    print ("c: ", c)
-
 plain = pow((int(c)+int(priv)), int(d), int(n))
-print (c)
-print (s)
-print (o)
-print (plain)
+print ("ciphertext: ", c)
+print ("message mod e: ", s)
+print ("public key aes encrypted: ", o)
+print ("plaintext returned: ", plain)
 plain2 = pow((int(c)-int(priv)), int(d), int(n))
 
 #    if plain == m:

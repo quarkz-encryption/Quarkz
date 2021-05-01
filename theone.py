@@ -1,26 +1,73 @@
-n = 187
-e = 3
-d = 107
-m = 72
+import random
+from decimal import Decimal
+import decimal
+
+decimal.getcontext().prec=10000
+
+n = 589
+e = 47
+d = 23
+m = 104
 
 s = m**e
 
-t = 574
+t = random.randint(1, 8000)
 
-k = n*23
+for i in range(2, 10000):
 
-o = k^t
+    k = n*i
 
-diff = abs(k-o)
+    o = k^t
 
-pub = n/diff
+    diff = abs(k-o) % n
 
-count = s//o 
+    pub = n/diff
 
-priv = round((count%pub)*diff)
+    count = s//o 
 
-cipher = s%o
+    with decimal.localcontext() as ctx:
+        ctx.prec = len(Decimal(count).as_tuple().digits) + 2
 
-plain = (((cipher+priv)**d)%n)
+    priv = round((Decimal(count)%Decimal(pub))*diff)
+    print (priv)
 
-print (plain)
+    cipher = s%o
+
+    plain = (((cipher+priv)**d)%n)
+    plain2 = (((cipher-priv)**d)%n)
+
+    if plain == m:
+
+        print("index: ", i)
+        print("something cool: ", (count%pub)*diff)
+        #print ("plain: ", plain)
+        #print ("cipher: ", cipher)
+        #print ("s: ", s)
+        #print ("k: ", k)
+        #print ("o: ", o)
+        #print ("diff: ", diff)
+        #print ("pub: ", pub)
+        #print ("count: ", count)
+        #print ("priv: ", priv)
+
+    
+    elif plain2 == m:
+
+        print ("==========================================")
+        print("index: ", i)
+        print("something cool: ", (count%pub)*diff)
+        print ("plain2: ", plain2)
+        print ("cipher: ", cipher)
+        print ("s: ", s)
+        print ("k: ", k)
+        print ("o: ", o)
+        print ("diff: ", diff)
+        print ("pub: ", pub)
+        print ("count: ", count)
+        print ("priv: ", priv)
+        print ("*******************************************8")
+
+    else:
+        print ("ERROR!!")
+        print ("plain2: ", plain2)
+        print ("plain: ", plain)
