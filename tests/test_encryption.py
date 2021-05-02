@@ -1,14 +1,15 @@
-def test_encrypt():
-    from quarkz.rsa import encrypt
-    import quarkz
+from quarkz.rsa import createKey, encrypt, decrypt
 
-    data = encrypt(33)
+key = createKey(1024)
+
+def test_encrypt():
+    ciphertext = encrypt(797, key["publicKey"])
 
 def test_encrypt_decrypt():
-    from quarkz.rsa import encrypt, decrypt
+    message = 98
 
-    message = 33 
-    data = encrypt(33) 
-    message_decrypted = int(decrypt(data))
-    assert(message == message_decrypted)
-    
+    ciphertext = encrypt(message, key["publicKey"])
+
+    plaintext = decrypt(ciphertext, key["privateKey"])
+
+    assert(message == plaintext)
