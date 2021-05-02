@@ -26,44 +26,62 @@ def modInverse(a, m):
         raise Exception('No modular inverse')
     return x%m
 
-decimal.getcontext().prec=10000
+def modpow(x,n,m):
+  if n == 0:
+    return 1
+  elif n == 1:
+    return x
+  elif n%2 == 0:
+    return modpow(x*(x%m),n/2,m)%m
+  elif n%2 == 1:
+    return (x *  modpow(x*(x%m),(n-1)/2,m)%m )%m
 
-p = number.getPrime(4096)
-q = number.getPrime(4096)
+decimal.getcontext().prec=100000
+
+p = number.getPrime(1024)
+q = number.getPrime(1024)
 n = Decimal(p*q)
 phi = Decimal((p-1)*(q-1))
+#k = n
+#
+#ksize = sys.getsizeof(k)
+#
+#kb = int(k).to_bytes(ksize, "big")
+#
+#key = get_random_bytes(32)
+#cipher = AES.new(key, AES.MODE_CTR)
+#ct_bytes = cipher.encrypt(kb)
+#o = int.from_bytes(ct_bytes, "big")
+
+#o = Decimal(o) + Decimal(5.9)
+
+# FIXES VULNERABILITY OF "o" BEING FACTORABLE AND EXPLOITED IN RSA.
+
+#osize = len(bin(o))
 while True:
-    e = Decimal(number.getPrime(12))
+    e = Decimal(number.getPrime(10))
     r = gcd(int(e), int(phi))
     if r == 1:
         break
 
+while True:
+    j = random.randint(1000, 10000)
+    o = (e-1)**j
+    check = gcd(int(e), int(o-1))
+    if check != 1:
+        break
+
 d = Decimal(modInverse(int(e), int(phi)))
 
-m = Decimal(24)
+m = Decimal(98)
 
 s = m**e
 
 t = random.randint(1, 8000)
 
 
-k = n
 
-ksize = sys.getsizeof(k)
-
-kb = int(k).to_bytes(ksize, "big")
-
-key = get_random_bytes(32)
-cipher = AES.new(key, AES.MODE_CTR)
-ct_bytes = cipher.encrypt(kb)
-o = int.from_bytes(ct_bytes, "big")
-nonce = b64encode(cipher.nonce).decode('utf-8')
-ct = b64encode(ct_bytes).decode('utf-8')
-#    result = json.dumps({'nonce':nonce, 'ciphertext':ct})
-
-#o = k^t
-
-diff = abs(k-Decimal(o)) % n
+diff = abs(n-Decimal(o))
 
 #print (diff)
 
@@ -72,29 +90,31 @@ if diff > 0:
 else:
     u = random.randint(0, 1000)
     o -= u
-    diff = abs(k-o) % n
+    diff = abs(n-o) % n
     pub = n/diff
 
-#    print ("pub: ", pub)
-#    print ("diff: ", diff)
+#print ("pub: ", pub)
+#print ("diff: ", diff)
 
 count = Decimal(int(s)//int(o))
 
-#    print("count: ", count)
+# print("count: ", count)
 
-priv = round((Decimal(count)%Decimal(pub))*diff)
+priv = round(((Decimal(count)%Decimal(pub))*diff)%n)
+
+# print ("priv: ", priv)
 
 #    print ("middle: ", count%pub)
 #    print ("priv: ", priv)
-c = pow(m, e, o)
+c = modpow(m, e, o)
 
 #    print ("c: ", c)
 
 plain = pow((int(c)+int(priv)), int(d), int(n))
-print (c)
-print (s)
-print (o)
-print (plain)
+#print ("ciphertext: ", c)
+#print ("message: ", s)
+#print ("public key: ", o)
+print ("plaintext: ", plain)
 plain2 = pow((int(c)-int(priv)), int(d), int(n))
 
 #    if plain == m:
@@ -128,5 +148,5 @@ plain2 = pow((int(c)-int(priv)), int(d), int(n))
 #        print ("priv: ", priv)
 #        print ("*******************************************8")
 
-if plain != m:
+if plain != m and plain2 != m:
     print ("ERROR!!")
