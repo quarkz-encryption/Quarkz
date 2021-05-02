@@ -12,57 +12,82 @@ from quarkz import utils
 
 decimal.getcontext().prec=100000
 
-p = number.getPrime(1024)
-q = number.getPrime(1024)
-n = Decimal(p*q)
-phi = Decimal((p-1)*(q-1))
+def encrypt(message: int) -> tuple: 
+    p = number.getPrime(1024)
+    q = number.getPrime(1024)
+    n = Decimal(p*q)
+    phi = Decimal((p-1)*(q-1))
 
-while True:
-    e = Decimal(number.getPrime(10))
-    r = utils.gcd(int(e), int(phi))
-    if r == 1:
-        break
+    while True:
+        e = Decimal(number.getPrime(10))
+        r = utils.gcd(int(e), int(phi))
+        if r == 1:
+            break
 
-while True:
-    j = random.randint(1000, 10000)
-    o = (e-1)**j
-    check = utils.gcd(int(e), int(o-1))
-    if check != 1:
-        break
+    while True:
+        j = random.randint(1000, 10000)
+        o = (e-1)**j
+        check = utils.gcd(int(e), int(o-1))
+        if check != 1:
+            break
 
-d = Decimal(utils.mod_inverse(int(e), int(phi)))
+    d = Decimal(utils.mod_inverse(int(e), int(phi)))
 
-m = Decimal(98)
+    assert(type(message) == int)
 
-s = m**e
-
-t = random.randint(1, 8000)
-
-
-
-diff = abs(n-Decimal(o))
-
-
-if diff > 0:
-    pub = n/diff
-else:
-    u = random.randint(0, 1000)
-    o -= u
-    diff = abs(n-o) % n
-    pub = n/diff
-
-count = Decimal(int(s)//int(o))
+    m = Decimal(message) 
+    s = m**e
+    t = random.randint(1, 8000)
+    
+    diff = abs(n-Decimal(o))
 
 
-priv = round(((Decimal(count)%Decimal(pub))*diff)%n)
+    if diff > 0:
+        pub = n/diff
+    else:
+        u = random.randint(0, 1000)
+        o -= u
+        diff = abs(n-o) % n
+        pub = n/diff
 
-c = utils.modpow(m, e, o)
+    count = Decimal(int(s)//int(o))
+
+    priv = round(((Decimal(count) % Decimal(pub)) * diff) % n)
+
+    return {"e": e, "m": m, "o": o, "priv": priv, "pub": pub, "d": d, "n": n}
 
 
-plain = pow((int(c)+int(priv)), int(d), int(n))
+def decrypt(e: decimal.Decimal, m: decimal.Decimal, o: decimal.Decimal, d: decimal.Decimal, priv: int, pub: int, n: decimal.Decimal) -> str: 
+    c = utils.modpow(m, e, o)
+    plain = pow((int(c)+int(priv)), int(d), int(n))
+    
+    if plain: 
+        return plain
+    else: 
+        return pow((int(c)-int(priv)), int(d), int(n))
 
-print ("plaintext: ", plain)
-plain2 = pow((int(c)-int(priv)), int(d), int(n))
 
-if plain != m and plain2 != m:
-    print ("ERROR!!")
+
+if __name__ == "__main__":
+    args = encrypt(98)
+
+    print(decrypt(**args))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
