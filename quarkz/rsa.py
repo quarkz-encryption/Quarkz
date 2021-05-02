@@ -9,6 +9,8 @@ from Crypto.Util import number
 from Crypto.PublicKey import RSA 
 from decimal import Decimal
 from quarkz import utils 
+from quarkz.dtypes import Encrypted
+import quarkz
 
 decimal.getcontext().prec=100000
 
@@ -54,17 +56,18 @@ def encrypt(message: int) -> tuple:
 
     priv = round(((Decimal(count) % Decimal(pub)) * diff) % n)
 
-    return {"e": e, "m": m, "o": o, "priv": priv, "pub": pub, "d": d, "n": n}
+    data = {"e": e, "m": m, "o": o, "priv": priv, "pub": pub, "d": d, "n": n}
+    return Encrypted(**data) 
 
 
-def decrypt(e: decimal.Decimal, m: decimal.Decimal, o: decimal.Decimal, d: decimal.Decimal, priv: int, pub: int, n: decimal.Decimal) -> str: 
-    c = utils.modpow(m, e, o)
-    plain = pow((int(c)+int(priv)), int(d), int(n))
+def decrypt(encrypted: quarkz.dtypes.Encrypted) -> str:
+    c = utils.modpow(encrypted._m, encrypted._e, encrypted._o)
+    plain = pow((int(c)+int(encrypted._priv)), int(encrypted._d), int(encrypted._n))
     
     if plain: 
         return plain
     else: 
-        return pow((int(c)-int(priv)), int(d), int(n))
+        return pow((int(c)-int(encrypted._priv)), int(encrypted._d), int(encrypted._n))
 
 
 
