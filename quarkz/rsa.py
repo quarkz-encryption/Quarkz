@@ -14,18 +14,16 @@ import quarkz
 
 decimal.getcontext().prec=100000
 
-def encrypt(message: int) -> tuple: 
-    p = number.getPrime(1024)
-    q = number.getPrime(1024)
+def createKey(keySize: int):
+    p = number.getPrime(keySize)
+    q = number.getPrime(keySize)
     n = Decimal(p*q)
     phi = Decimal((p-1)*(q-1))
-
     while True:
         e = Decimal(number.getPrime(10))
         r = utils.gcd(int(e), int(phi))
         if r == 1:
             break
-
     while True:
         j = random.randint(1000, 10000)
         o = (e-1)**j
@@ -34,40 +32,68 @@ def encrypt(message: int) -> tuple:
             break
 
     d = Decimal(utils.mod_inverse(int(e), int(phi)))
-
-    assert(type(message) == int)
-
-    m = Decimal(message) 
-    s = m**e
-    t = random.randint(1, 8000)
     
     diff = abs(n-Decimal(o))
 
 
     if diff > 0:
-        pub = n/diff
+        ratio = n/diff
     else:
         u = random.randint(0, 1000)
         o -= u
         diff = abs(n-o) % n
-        pub = n/diff
+        ratio = n/diff
 
-    count = Decimal(int(s)//int(o))
+    privateKey = {
+        "d": d,
+        "n": n,
+        "diff": diff,
+    }
 
-    priv = round(((Decimal(count) % Decimal(pub)) * diff) % n)
+    publicKey = {
+        "e": e,
+        "o": o,
+        "ratio": ratio
+    }
 
-    data = {"e": e, "m": m, "o": o, "priv": priv, "pub": pub, "d": d, "n": n}
-    return Encrypted(**data) 
+    keyPair = {
+        "privateKey": privateKey,
+        "publicKey": publicKey
+    }
+
+    return keyPair
+
+def encrypt(message: int, publicKey: dict) -> tuple: 
+
+    assert(type(message) == int)
+
+    m = Decimal(message)
+    s = m**publicKey["e"]
+
+    count = Decimal(int(s) // int(publicKey["o"]))
+
+    offsetCount = Decimal(count) % Decimal(publicKey["ratio"])
+
+    ciphertext = Decimal(pow(m, publicKey["e"], publicKey["o"])) #might need to change back to modpow func
+
+    data = {"ciphertext": ciphertext, "offsetCount": offsetCount}
+
+    return data
 
 
-def decrypt(encrypted: quarkz.dtypes.Encrypted) -> str:
-    c = utils.modpow(encrypted._m, encrypted._e, encrypted._o)
-    plain = pow((int(c)+int(encrypted._priv)), int(encrypted._d), int(encrypted._n))
+def decrypt(encrypted: dict, privateKey: dict) -> int:
     
-    if plain: 
-        return plain
+    offset = (round(encrypted["offsetCount"] * privateKey["diff"])) % privateKey["n"]
+
+    ciphertext = int(encrypted["ciphertext"] + offset)
+
+    plaintext = pow(ciphertext, int(privateKey["d"]), int(privateKey["n"]))
+    
+    if plaintext:
+        return plaintext
     else: 
-        return pow((int(c)-int(encrypted._priv)), int(encrypted._d), int(encrypted._n))
+        ciphertext = int(encrypted["ciphertext"] - offset)
+        return pow(ciphertext, int(privateKey["d"]), int(privateKey["n"]))
 
 
 
@@ -75,22 +101,3 @@ if __name__ == "__main__":
     args = encrypt(98)
 
     print(decrypt(**args))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

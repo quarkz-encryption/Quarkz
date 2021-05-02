@@ -1,21 +1,16 @@
-import decimal
+from decimal import Decimal
 
 class Encrypted(dict):
-    def __init__(self, e: decimal.Decimal, m: decimal.Decimal, o: decimal.Decimal, d: decimal.Decimal, priv: int, pub: int, n: decimal.Decimal):
+    def __init__(self, ciphertext: Decimal, offsetCount: Decimal):
         ''' All values are read only '''
-        self._e = e
-        self._m = m 
-        self._o = o 
-        self._d = d 
-        self._priv = priv 
-        self._pub = pub 
-        self._n = n 
+        self._ciphertext = ciphertext
+        self._offsetCount = offsetCount
 
     def __str__(self):
-        return f"quarkz.Encryption object @ {self._pub}"
+        return f"quarkz.Encryption object @ {self._offsetCount}"
     
     @property
     def __dict__(self):
-        return {"e": self._e, "m": self._m, "o": self._o, "d": self._d, "priv": self._priv, "pub": self._pub, "n": self._n}
+        return {"ciphertext": self._ciphertext, "offset": self._offsetCount}
 
 
