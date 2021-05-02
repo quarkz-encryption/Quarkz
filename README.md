@@ -1,4 +1,5 @@
 # Quarkz
+[![Unit Tests](https://github.com/quarkz-encryption/Quarkz/actions/workflows/test.yml/badge.svg)](https://github.com/quarkz-encryption/Quarkz/actions/workflows/test.yml)
 
 An encryption library
 
