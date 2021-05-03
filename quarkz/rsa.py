@@ -9,7 +9,7 @@ from Crypto.Util import number
 from Crypto.PublicKey import RSA 
 from decimal import Decimal
 from quarkz import utils 
-from quarkz.dtypes import Encrypted
+from quarkz.dtypes import Encrypted, KeyPair
 import quarkz
 
 decimal.getcontext().prec=100000
@@ -57,11 +57,11 @@ def createKey(keySize: int):
     }
 
     keyPair = {
-        "privateKey": privateKey,
-        "publicKey": publicKey
+        "private_key": privateKey,
+        "public_key": publicKey
     }
 
-    return keyPair
+    return KeyPair(**keyPair)
 
 def encrypt(message: int, publicKey: dict) -> tuple: 
 
@@ -78,12 +78,15 @@ def encrypt(message: int, publicKey: dict) -> tuple:
 
     data = {"ciphertext": ciphertext, "offsetCount": offsetCount}
 
-    return data
+    return Encrypted(**data)
 
 
-def decrypt(encrypted: dict, privateKey: dict) -> int:
-    
-    offset = (round(encrypted["offsetCount"] * privateKey["diff"])) % privateKey["n"]
+def decrypt(encrypted: quarkz.dtypes.Encrypted, keypair: quarkz.dtypes.KeyPair) -> int:
+    encrypted = vars(encrypted)
+
+    privateKey = keypair.get_private_key()
+
+    offset = (round(encrypted["offset"] * privateKey["diff"])) % privateKey["n"]
 
     ciphertext = int(encrypted["ciphertext"] + offset)
 
@@ -98,6 +101,23 @@ def decrypt(encrypted: dict, privateKey: dict) -> int:
 
 
 if __name__ == "__main__":
-    args = encrypt(98)
+    #first, create a new key pair 
+    pair = createKey(1024)
 
-    print(decrypt(**args))
+    #encrypt some data
+    message = 69
+    public_key = pair.get_public_key()
+    encrypted_data = encrypt(message, public_key)
+
+    #decrypt the data again
+    decrypted_data = decrypt(encrypted_data, pair)
+    print(decrypted_data)
+
+
+
+
+
+
+
+
+
