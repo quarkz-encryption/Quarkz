@@ -2,89 +2,71 @@ import random
 import sys
 import json
 import decimal
+
 from base64 import b64encode, b64decode
+from decimal import Decimal
+
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 from Crypto.Util import number
 from Crypto.PublicKey import RSA 
-from decimal import Decimal
+
 from quarkz import utils 
-from quarkz.dtypes import Encrypted
+from quarkz.dtypes import Encrypted 
 import quarkz
 
 decimal.getcontext().prec=100000
 
-def encrypt(message: int) -> tuple: 
-    p = number.getPrime(1024)
-    q = number.getPrime(1024)
-    n = Decimal(p*q)
-    phi = Decimal((p-1)*(q-1))
 
-    while True:
-        e = Decimal(number.getPrime(10))
-        r = utils.gcd(int(e), int(phi))
-        if r == 1:
-            break
-
-    while True:
-        j = random.randint(1000, 10000)
-        o = (e-1)**j
-        check = utils.gcd(int(e), int(o-1))
-        if check != 1:
-            break
-
-    d = Decimal(utils.mod_inverse(int(e), int(phi)))
+def encrypt(message: int, publicKey: dict) -> quarkz.dtypes.Encrypted: 
 
     assert(type(message) == int)
 
-    m = Decimal(message) 
-    s = m**e
-    t = random.randint(1, 8000)
+    m = Decimal(message)
+    s = m**publicKey["e"]
+
+    count = Decimal(int(s) // int(publicKey["o"]))
+
+    offsetCount = Decimal(count) % Decimal(publicKey["ratio"])
+
+    ciphertext = Decimal(pow(m, publicKey["e"], publicKey["o"])) #might need to change back to modpow func
+
+    data = {"ciphertext": ciphertext, "offsetCount": offsetCount}
+
+    return Encrypted(**data)
+
+
+def decrypt(encrypted: quarkz.dtypes.Encrypted, keypair: quarkz.dtypes.KeyPair) -> int:
+    encrypted = vars(encrypted)
+
+    privateKey = keypair.get_private_key()
+
+    offset = (round(encrypted["offset"] * privateKey["diff"])) % privateKey["n"]
+
+    ciphertext = int(encrypted["ciphertext"] + offset)
+
+    plaintext = pow(ciphertext, int(privateKey["d"]), int(privateKey["n"]))
     
-    diff = abs(n-Decimal(o))
-
-
-    if diff > 0:
-        pub = n/diff
-    else:
-        u = random.randint(0, 1000)
-        o -= u
-        diff = abs(n-o) % n
-        pub = n/diff
-
-    count = Decimal(int(s)//int(o))
-
-    priv = round(((Decimal(count) % Decimal(pub)) * diff) % n)
-
-    data = {"e": e, "m": m, "o": o, "priv": priv, "pub": pub, "d": d, "n": n}
-    return Encrypted(**data) 
-
-
-def decrypt(encrypted: quarkz.dtypes.Encrypted) -> str:
-    c = utils.modpow(encrypted._m, encrypted._e, encrypted._o)
-    plain = pow((int(c)+int(encrypted._priv)), int(encrypted._d), int(encrypted._n))
-    
-    if plain: 
-        return plain
+    if plaintext:
+        return plaintext
     else: 
-        return pow((int(c)-int(encrypted._priv)), int(encrypted._d), int(encrypted._n))
+        ciphertext = int(encrypted["ciphertext"] - offset)
+        return pow(ciphertext, int(privateKey["d"]), int(privateKey["n"]))
 
 
 
 if __name__ == "__main__":
-    args = encrypt(98)
+    #first, create a new key pair 
+    pair = utils.createKey(1024)
 
-    print(decrypt(**args))
+    #encrypt some data
+    message = 69
+    public_key = pair.get_public_key()
+    encrypted_data = encrypt(message, public_key)
 
-
-
-
-
-
-
-
-
-
+    #decrypt the data again
+    decrypted_data = decrypt(encrypted_data, pair)
+    print(decrypted_data)
 
 
 
