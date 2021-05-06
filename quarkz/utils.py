@@ -1,7 +1,11 @@
 from Crypto.Util import number
 from decimal import Decimal
+import decimal
 from quarkz.dtypes import KeyPair
 import random
+import sys
+
+decimal.getcontext().prec=100000
 
 def gcd(a, b): 
    while a != 0:
@@ -34,26 +38,25 @@ def createKey(keysize: int = 1024):
     p = number.getPrime(keysize)
     q = number.getPrime(keysize)
     n = Decimal(p*q)
+    print(n)
     phi = Decimal((p-1)*(q-1))
     while True:
-        e = Decimal(number.getPrime(10))
+        e = Decimal(number.getPrime(8))
         r = gcd(int(e), int(phi))
         if r == 1:
-            break
-    while True:
-        j = random.randint(1000, 10000)
-        o = (e-1)**j
-        check = gcd(int(e), int(o-1))
-        if check != 1:
+            t = Decimal(random.getrandbits(4))
+            o = e**t
             break
 
     d = Decimal(mod_inverse(int(e), int(phi)))
     
-    diff = abs(n-Decimal(o))
+    diff = (abs(n-Decimal(o))) % n
 
+    #print(n)
 
     if diff > 0:
-        ratio = n/diff
+        ratio = (n/diff)*Decimal(random.getrandbits(4096))
+        print ("ratio: ", sys.getsizeof(round(ratio)) * 8)
     else:
         u = random.randint(0, 1000)
         o -= u
@@ -64,6 +67,7 @@ def createKey(keysize: int = 1024):
         "d": d,
         "n": n,
         "diff": diff,
+        "r": (n/diff)
     }
 
     publicKey = {
