@@ -27,11 +27,22 @@ def encrypt(message: int, publicKey: dict) -> quarkz.dtypes.Encrypted:
 
     count = Decimal(int(s) // int(publicKey["o"]))
 
-    print(sys.getsizeof(count))
+    print("count: ", sys.getsizeof(count) * 8)
 
     offsetCount = Decimal(count) % Decimal(publicKey["ratio"])
 
-    print(sys.getsizeof(offsetCount))
+    n1 = (publicKey["ratio"] * publicKey["o"]) / (publicKey["ratio"] - 1)
+
+    d = n1 / publicKey["ratio"]
+
+    n2 = d + publicKey["o"]
+
+    print (round(n1))
+    print (round(n2))
+
+    #print (round(publicKey["ratio"]))
+
+    print("offset: ", sys.getsizeof(round(offsetCount))*8)
 
     ciphertext = Decimal(pow(m, publicKey["e"], publicKey["o"])) #might need to change back to modpow func
 
@@ -47,11 +58,13 @@ def decrypt(encrypted: quarkz.dtypes.Encrypted, keypair: quarkz.dtypes.KeyPair) 
 
     privateKey = keypair.get_private_key()
 
-    offset = (round((encrypted["offset"] * privateKey["diff"]))) % privateKey["n"]
+    offset = (round(((encrypted["offset"] % privateKey["r"]) * privateKey["diff"]))) % (privateKey["n"])
 
     ciphertext = int(encrypted["ciphertext"] - offset)
 
     plaintext = pow(ciphertext, int(privateKey["d"]), int(privateKey["n"]))
+
+    print (plaintext)
     
     if plaintext:
         return plaintext

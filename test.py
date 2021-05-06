@@ -6,7 +6,7 @@ from timeit import default_timer
 
 create = default_timer()
 
-key_pair = createKey(keysize=129)
+key_pair = createKey(keysize=257)
 
 #print(default_timer() - create)
 #print(key_pair) 
@@ -17,7 +17,7 @@ start = default_timer()
 
 pub_key = key_pair.get_public_key()
 
-some_data = random.getrandbits(128)
+some_data = random.getrandbits(256)
 
 print ("plaintext to encrypt: ", some_data)
 
