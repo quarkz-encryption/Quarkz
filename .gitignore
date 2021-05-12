@@ -1,3 +1,4 @@
 env/
 quarkz/__pycache__/
 tests/__pycahce__/
+test.py
