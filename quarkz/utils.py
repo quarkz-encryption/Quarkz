@@ -4,6 +4,8 @@ import decimal
 from quarkz.dtypes import KeyPair
 import random
 import sys
+import binascii
+
 
 decimal.getcontext().prec=100000
 
@@ -33,6 +35,16 @@ def modpow(x,n,m):
     return modpow(x*(x%m),n/2,m)%m
   elif n%2 == 1:
     return (x *  modpow(x*(x%m),(n-1)/2,m)%m )%m
+
+def convert_to_int(data: str) -> int: 
+    return int.from_bytes(data.encode(), 'big')
+
+def convert_to_str(data: int) -> str:
+    return data.to_bytes((data.bit_length() + 7) // 8, 'big').decode()
+
+    
+
+
 
 def createKey(keysize: int = 1024):
     p = number.getPrime(keysize)

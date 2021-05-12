@@ -18,9 +18,11 @@ import quarkz
 decimal.getcontext().prec=100000
 
 
-def encrypt(message: int, publicKey: dict) -> quarkz.dtypes.Encrypted: 
+def encrypt(message: str, publicKey: dict) -> quarkz.dtypes.Encrypted: 
 
-    assert(type(message) == int)
+    assert(type(message) == str)
+
+    message = utils.convert_to_int(message)
 
     m = Decimal(message)
     s = m**publicKey["e"]
@@ -67,7 +69,7 @@ def decrypt(encrypted: quarkz.dtypes.Encrypted, keypair: quarkz.dtypes.KeyPair) 
     print (plaintext)
     
     if plaintext:
-        return plaintext
+        return utils.convert_to_str(plaintext)
     else: 
         ciphertext = int(encrypted["ciphertext"] + offset)
         return pow(ciphertext, int(privateKey["d"]), int(privateKey["n"]))
