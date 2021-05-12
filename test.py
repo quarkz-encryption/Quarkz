@@ -1,33 +1,37 @@
 from quarkz.utils import createKey
 
 import random
+import time
 
-from timeit import default_timer
-
-create = default_timer()
-
-key_pair = createKey(keysize=257)
-
-#print(default_timer() - create)
-#print(key_pair) 
+key_pair = createKey(keysize=8092)
 
 from quarkz.rsa import encrypt
 
-start = default_timer()
-
 pub_key = key_pair.get_public_key()
+
+start = time.time()
+
+datasize = 0
 
 some_data = random.getrandbits(256)
 
-print ("plaintext to encrypt: ", some_data)
+print ("plaintext encrypted: ", some_data)
 
 encrypted_data = encrypt(some_data, pub_key)
 
-#print(encrypted_data) 
+datasize += 256
+
+end = time.time()
 
 from quarkz.rsa import decrypt
 
+decryptsize = 0
+
+start = time.time()
+
 decrypted_data = decrypt(encrypted_data, key_pair)
+decryptsize += 256
+
+end = time.time()
 
 print("plaintext returned: ", decrypted_data) 
-#print(default_timer() - start)
