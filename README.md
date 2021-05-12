@@ -2,6 +2,11 @@
 [![Unit Tests](https://github.com/quarkz-encryption/Quarkz/actions/workflows/test.yml/badge.svg)](https://github.com/quarkz-encryption/Quarkz/actions/workflows/test.yml)
 
 A mathematically beautiful encryption library
+## Example 
+Install the dependencies, then: 
+```
+$ python3 example.py 
+```
 
 ## How to Use
 First, create a key pair:
