@@ -8,11 +8,11 @@ key_pair = createKey(keysize=1024)
 
 def test_encrypt():
     public_key = key_pair.get_public_key()
-    encrypted_data = encrypt(21, public_key)
+    encrypted_data = encrypt("this is a test", public_key)
 
 
 def test_encrypt_decrypt():
-    m = 41
+    m = "this is a test"
     public_key = key_pair.get_public_key()
     encrypted_data = encrypt(m, public_key)
 
