@@ -38,7 +38,7 @@ def createKey(keysize: int = 1024):
     p = number.getPrime(keysize)
     q = number.getPrime(keysize)
     n = Decimal(p*q)
-    print(n)
+    #print(n)
     phi = Decimal((p-1)*(q-1))
     while True:
         e = Decimal(number.getPrime(8))
@@ -49,31 +49,38 @@ def createKey(keysize: int = 1024):
             break
 
     d = Decimal(mod_inverse(int(e), int(phi)))
+
+    #print ("osize: ", sys.getsizeof(o)*8)
     
     diff = (abs(n-Decimal(o))) % n
 
     #print(n)
 
+    x = Decimal(random.getrandbits(8192))
+
     if diff > 0:
-        ratio = (n/diff)*Decimal(random.getrandbits(4096))
-        print ("ratio: ", sys.getsizeof(round(ratio)) * 8)
+        ratio = (n/diff) * x
+        #print ("ratio: ", sys.getsizeof(round(ratio))*8)
     else:
         u = random.randint(0, 1000)
         o -= u
         diff = abs(n-o) % n
-        ratio = n/diff
+        ratio = (n/diff) * x
 
     privateKey = {
         "d": d,
         "n": n,
         "diff": diff,
-        "r": (n/diff)
+        "r": (n/diff),
     }
 
     publicKey = {
         "e": e,
         "o": o,
-        "ratio": ratio
+        "ratio": ratio,
+        "diff": diff,
+        "x": x,
+        "n": n
     }
 
     keyPair = {

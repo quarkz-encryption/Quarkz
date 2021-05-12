@@ -23,11 +23,19 @@ def encrypt(message: int, publicKey: dict) -> quarkz.dtypes.Encrypted:
     assert(type(message) == int)
 
     m = Decimal(message)
-    s = m**publicKey["e"]
 
+    # This is really slow find ways to speed up...
+    s = m**publicKey["e"]
+    
+    #print ("s: ", sys.getsizeof(s)*8)
+
+
+    # Calculating the count is really slow
+    # We want to implement some sort of 
+    # modular exponentiation trick to speed this up.
     count = Decimal(int(s) // int(publicKey["o"]))
 
-    print("count: ", sys.getsizeof(count) * 8)
+    #print("count: ", sys.getsizeof(count) * 8)
 
     offsetCount = Decimal(count) % Decimal(publicKey["ratio"])
 
@@ -37,16 +45,28 @@ def encrypt(message: int, publicKey: dict) -> quarkz.dtypes.Encrypted:
 
     n2 = d + publicKey["o"]
 
-    print (round(n1))
-    print (round(n2))
+    #print ("n: ", publicKey["n"])
+
+    # for x in range (10000):
+
+    #     #guess = random.getrandbits(8192)
+    #     guess = number.getPrime(257) * number.getPrime(257)
+
+    #     #pred = abs((publicKey["o"] * publicKey["ratio"]) / (guess - publicKey["ratio"]))
+    #     pred = abs(publicKey["ratio"] - ((publicKey["o"] * publicKey["ratio"]) / guess))
+    #     #print (pred)
+        
+
+    #print (round(n1))
+    #print (round(n2))
 
     #print (round(publicKey["ratio"]))
 
-    print("offset: ", sys.getsizeof(round(offsetCount))*8)
+    #print("offset: ", sys.getsizeof(round(offsetCount))*8)
 
-    ciphertext = Decimal(pow(m, publicKey["e"], publicKey["o"])) #might need to change back to modpow func
+    ciphertext = Decimal(pow(m, publicKey["e"], publicKey["o"]))
 
-    print ("ciphertext generated: ", ciphertext)
+    #print ("ciphertext generated: ", ciphertext)
 
     data = {"ciphertext": ciphertext, "offsetCount": offsetCount}
 
@@ -58,13 +78,13 @@ def decrypt(encrypted: quarkz.dtypes.Encrypted, keypair: quarkz.dtypes.KeyPair) 
 
     privateKey = keypair.get_private_key()
 
-    offset = (round(((encrypted["offset"] % privateKey["r"]) * privateKey["diff"]))) % (privateKey["n"])
+    offset = round(((encrypted["offset"]) * privateKey["diff"])) % privateKey["n"]
 
     ciphertext = int(encrypted["ciphertext"] - offset)
 
     plaintext = pow(ciphertext, int(privateKey["d"]), int(privateKey["n"]))
 
-    print (plaintext)
+    #print (plaintext)
     
     if plaintext:
         return plaintext
