@@ -1,12 +1,31 @@
 from quarkz.utils import createKey 
 from quarkz.rsa import encrypt, decrypt
+from decimal import Decimal
+import time, sys, decimal
+
+decimal.getcontext().prec=5000
 
 if __name__ == "__main__":
-    message = input('enter text: ')
-    key = createKey(keysize=1024) 
-    pub = key.get_public_key() 
-    print(f'message: {message}')
-    encrypted_data = encrypt(message, pub) 
+    createtime = []
+    encrypttime = []
+    decrypttime = []
+    #message = input('enter text: ')
+    message = "This is a test"
+    print ("message to be encrypted: ", message)
+    start = time.time()
+    key = createKey(keysize=256)
+    pub = key.get_public_key()
+    end = time.time()
+    createtime.append(end-start) 
+    
+    start = time.time()
+    encrypted_data = encrypt(message, pub)
+    end = time.time()
+    encrypttime.append(end-start) 
 
+    start = time.time()
     decrypted_data = decrypt(encrypted_data, key) 
-    print(f'end message: {decrypted_data}!')
+    end = time.time()
+    decrypttime.append(end-start)
+
+    print ("decrypted data: ", decrypted_data)
