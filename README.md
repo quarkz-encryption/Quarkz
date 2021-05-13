@@ -4,6 +4,44 @@
 
 A mathematically beautiful encryption library
 
+## How to Install
+
+For development, it is recommended to use a virtual env:
+
+```
+$ python3 -m venv env
+```
+
+To activate it:
+
+```
+$ source env/bin/activate
+```
+
+or when using the fish shell:
+
+```
+$ source env/bin/activate.fish
+```
+
+To install:
+
+```
+$ pip3 -r requirements.txt
+```
+
+## How to run pre-built test
+
+First, you will need to set up the environment as shown above.
+
+_Note: Make sure you are in your python3 virtual environment._
+
+Once that is done simply run `string_test.py` in the top directory:
+
+```bash
+$ python string_test.py
+```
+
 ## How to Use
 
 First, create a key pair:
@@ -36,30 +74,4 @@ from quarkz.rsa import decrypt
 decrypted_data = decrypt(encrypted_data, key_pair)
 print(decrypted_data) # --> "some string"
 
-```
-
-## How to Install
-
-For development, it is recommended to use a virtual env:
-
-```
-$ python3 -m venv env
-```
-
-To activate it:
-
-```
-$ source env/bin/activate
-```
-
-or when using the fish shell:
-
-```
-$ source env/bin/activate.fish
-```
-
-To install:
-
-```
-$ pip3 -r requirements.txt
 ```
