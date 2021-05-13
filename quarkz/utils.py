@@ -7,7 +7,7 @@ import sys
 import binascii
 
 
-decimal.getcontext().prec=100000
+decimal.getcontext().prec=5000
 
 def gcd(a, b): 
    while a != 0:
@@ -53,7 +53,7 @@ def createKey(keysize: int = 1024):
     #print(n)
     phi = Decimal((p-1)*(q-1))
     while True:
-        e = Decimal(number.getPrime(8))
+        e = Decimal(number.getPrime(6))
         r = gcd(int(e), int(phi))
         if r == 1:
             t = Decimal(random.getrandbits(4))
@@ -63,12 +63,13 @@ def createKey(keysize: int = 1024):
     d = Decimal(mod_inverse(int(e), int(phi)))
 
     #print ("osize: ", sys.getsizeof(o)*8)
-    
     diff = (abs(n-Decimal(o))) % n
+
+    #print (o)
 
     #print(n)
 
-    x = Decimal(random.getrandbits(8192))
+    x = Decimal(random.getrandbits(1024))
 
     if diff > 0:
         ratio = (n/diff) * x
@@ -83,17 +84,17 @@ def createKey(keysize: int = 1024):
         "d": d,
         "n": n,
         "diff": diff,
-        "r": (n/diff),
     }
+
+    #print ("private: ", sys.getsizeof(privateKey["d"]) + sys.getsizeof(privateKey["n"] + sys.getsizeof(privateKey["diff"])))
 
     publicKey = {
         "e": e,
         "o": o,
         "ratio": ratio,
-        "diff": diff,
-        "x": x,
-        "n": n
     }
+
+    #print ("public: ", sys.getsizeof(publicKey["e"]) + sys.getsizeof(publicKey["o"]) + sys.getsizeof(publicKey["ratio"]))
 
     keyPair = {
         "private_key": privateKey,

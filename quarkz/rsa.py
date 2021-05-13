@@ -15,7 +15,7 @@ from quarkz import utils
 from quarkz.dtypes import Encrypted 
 import quarkz
 
-decimal.getcontext().prec=100000
+decimal.getcontext().prec=5000
 
 
 def encrypt(message: str, publicKey: dict) -> quarkz.dtypes.Encrypted: 
@@ -37,40 +37,18 @@ def encrypt(message: str, publicKey: dict) -> quarkz.dtypes.Encrypted:
     # modular exponentiation trick to speed this up.
     count = Decimal(int(s) // int(publicKey["o"]))
 
-    #print("count: ", sys.getsizeof(count) * 8)
+    #print (count)
+
+    #print(sys.getsizeof(count))
 
     offsetCount = Decimal(count) % Decimal(publicKey["ratio"])
 
-    n1 = (publicKey["ratio"] * publicKey["o"]) / (publicKey["ratio"] - 1)
-
-    d = n1 / publicKey["ratio"]
-
-    n2 = d + publicKey["o"]
-
-    #print ("n: ", publicKey["n"])
-
-    # for x in range (10000):
-
-    #     #guess = random.getrandbits(8192)
-    #     guess = number.getPrime(257) * number.getPrime(257)
-
-    #     #pred = abs((publicKey["o"] * publicKey["ratio"]) / (guess - publicKey["ratio"]))
-    #     pred = abs(publicKey["ratio"] - ((publicKey["o"] * publicKey["ratio"]) / guess))
-    #     #print (pred)
-        
-
-    #print (round(n1))
-    #print (round(n2))
-
-    #print (round(publicKey["ratio"]))
-
-    #print("offset: ", sys.getsizeof(round(offsetCount))*8)
-
     ciphertext = Decimal(pow(m, publicKey["e"], publicKey["o"]))
 
-    #print ("ciphertext generated: ", ciphertext)
-
     data = {"ciphertext": ciphertext, "offsetCount": offsetCount}
+
+    #print ("ciphertext: ", sys.getsizeof(data["ciphertext"]) + sys.getsizeof(data["offsetCount"]))
+    #print ("ciphertext: ", ciphertext)
 
     return Encrypted(**data)
 
