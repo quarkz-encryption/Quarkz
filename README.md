@@ -22,7 +22,7 @@ First, create a key pair:
 ```python
 from quarkz.utils import createKey
 
-key_pair = createKey(keysize=2048)
+key_pair = createKey(keysize=256)
 print(key_pair) # --> <quarkz.dtypes.KeyPair object at 0x7f430c33b1c0>
 ```
 
