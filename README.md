@@ -5,16 +5,21 @@
 [![Upload Release](https://github.com/quarkz-encryption/Quarkz/actions/workflows/python-publish.yml/badge.svg)](https://github.com/quarkz-encryption/Quarkz/actions/workflows/python-publish.yml)
 
 A mathematically beautiful encryption library
-## Example 
-Install the dependencies, then: 
+
+## Example
+
+Install the dependencies, then:
+
 ```
-$ python3 example.py 
+$ python3 example.py
 ```
 
 ## How to Install
+
 ```
 $ pip3 install quarkz
 ```
+
 ## How to Use
 
 First, create a key pair:
@@ -22,7 +27,7 @@ First, create a key pair:
 ```python
 from quarkz.utils import createKey
 
-key_pair = createKey(keysize=256)
+key_pair = createKey(keysize=256) #256 is the recommended keysize
 print(key_pair) # --> <quarkz.dtypes.KeyPair object at 0x7f430c33b1c0>
 ```
 
@@ -86,4 +91,3 @@ Once that is done simply run `string_test.py` in the top directory:
 ```bash
 $ python string_test.py
 ```
-

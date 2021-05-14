@@ -7,7 +7,7 @@ import sys
 import binascii
 
 
-decimal.getcontext().prec=5000
+#decimal.getcontext().prec=5000
 
 def gcd(a, b): 
    while a != 0:
@@ -47,6 +47,7 @@ def convert_to_str(data: int) -> str:
 
 
 def createKey(keysize: int = 1024):
+    decimal.getcontext().prec=(keysize * 10)
     p = number.getPrime(keysize)
     q = number.getPrime(keysize)
     n = Decimal(p*q)
