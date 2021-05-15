@@ -6,7 +6,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 setup(
   name='quarkz',
-  version='0.0.1',
+  version='0.0.2',
   url='https://github.com/quarkz-encryption/Quarkz',
   author='tavivia',
   author_email='tavian@quarkz-encryption.com',
