@@ -1,5 +1,6 @@
 import os
 from setuptools import setup, find_packages
+from pkg_resources import parse_requirements
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -10,7 +11,7 @@ setup(
   author='tavivia',
   author_email='tavian@quarkz-encryption.com',
   packages=find_packages(exclude=("tests",)),
-  install_reqs = parse_requirements('requirements.txt', session='hack'),
+  install_reqs=['pycryptodome'],
   platforms='any',
   license='MIT',
   ext_modules=[],
