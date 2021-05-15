@@ -46,7 +46,7 @@ def convert_to_str(data: int) -> str:
 
 
 
-def createKey(keysize: int = 1024):
+def createKey(keysize: int = 256):
     p = number.getPrime(keysize)
     q = number.getPrime(keysize)
     n = Decimal(p*q)
