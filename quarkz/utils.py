@@ -4,8 +4,10 @@ import decimal
 from quarkz.dtypes import KeyPair
 import random
 import sys
+import binascii
 
-decimal.getcontext().prec=100000
+
+#decimal.getcontext().prec=5000
 
 def gcd(a, b): 
    while a != 0:
@@ -34,14 +36,25 @@ def modpow(x,n,m):
   elif n%2 == 1:
     return (x *  modpow(x*(x%m),(n-1)/2,m)%m )%m
 
-def createKey(keysize: int = 1024):
+def convert_to_int(data: str) -> int: 
+    return int.from_bytes(data.encode(), 'big')
+
+def convert_to_str(data: int) -> str:
+    return data.to_bytes((data.bit_length() + 7) // 8, 'big').decode()
+
+    
+
+
+
+def createKey(keysize: int = 256):
+    decimal.getcontext().prec=(keysize * 10)
     p = number.getPrime(keysize)
     q = number.getPrime(keysize)
     n = Decimal(p*q)
     #print(n)
     phi = Decimal((p-1)*(q-1))
     while True:
-        e = Decimal(number.getPrime(8))
+        e = Decimal(number.getPrime(6))
         r = gcd(int(e), int(phi))
         if r == 1:
             t = Decimal(random.getrandbits(4))
@@ -51,12 +64,13 @@ def createKey(keysize: int = 1024):
     d = Decimal(mod_inverse(int(e), int(phi)))
 
     #print ("osize: ", sys.getsizeof(o)*8)
-    
     diff = (abs(n-Decimal(o))) % n
+
+    #print (o)
 
     #print(n)
 
-    x = Decimal(random.getrandbits(8192))
+    x = Decimal(random.getrandbits(1024))
 
     if diff > 0:
         ratio = (n/diff) * x
@@ -71,17 +85,17 @@ def createKey(keysize: int = 1024):
         "d": d,
         "n": n,
         "diff": diff,
-        "r": (n/diff),
     }
+
+    #print ("private: ", sys.getsizeof(privateKey["d"]) + sys.getsizeof(privateKey["n"] + sys.getsizeof(privateKey["diff"])))
 
     publicKey = {
         "e": e,
         "o": o,
         "ratio": ratio,
-        "diff": diff,
-        "x": x,
-        "n": n
     }
+
+    #print ("public: ", sys.getsizeof(publicKey["e"]) + sys.getsizeof(publicKey["o"]) + sys.getsizeof(publicKey["ratio"]))
 
     keyPair = {
         "private_key": privateKey,
