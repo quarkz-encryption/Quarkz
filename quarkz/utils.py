@@ -42,10 +42,6 @@ def convert_to_int(data: str) -> int:
 def convert_to_str(data: int) -> str:
     return data.to_bytes((data.bit_length() + 7) // 8, 'big').decode()
 
-    
-
-
-
 def createKey(keysize: int = 256):
     decimal.getcontext().prec=(keysize * 10)
     p = number.getPrime(keysize)
@@ -54,7 +50,7 @@ def createKey(keysize: int = 256):
     #print(n)
     phi = Decimal((p-1)*(q-1))
     while True:
-        e = Decimal(number.getPrime(6))
+        e = Decimal(number.getPrime(4))
         r = gcd(int(e), int(phi))
         if r == 1:
             t = Decimal(random.getrandbits(4))
@@ -62,6 +58,8 @@ def createKey(keysize: int = 256):
             break
 
     d = Decimal(mod_inverse(int(e), int(phi)))
+
+    print (e)
 
     #print ("osize: ", sys.getsizeof(o)*8)
     diff = (abs(n-Decimal(o))) % n
@@ -72,14 +70,25 @@ def createKey(keysize: int = 256):
 
     x = Decimal(random.getrandbits(1024))
 
+    y = Decimal(random.getrandbits(256))
+
     if diff > 0:
-        ratio = (n/diff) * x
+        ratio = ((n*(diff*x))//(diff*y))
+        #ratio = ((n/diff)%1)+1
         #print ("ratio: ", sys.getsizeof(round(ratio))*8)
     else:
         u = random.randint(0, 1000)
         o -= u
         diff = abs(n-o) % n
-        ratio = (n/diff) * x
+        ratio = ((n*(diff*x))//(diff*y))
+
+    print ("ratio: ", ratio)
+
+    print ("n: ", n)
+
+    print ("o: ", o)
+
+    print ("diff: ", (abs(n-Decimal(o))))
 
     privateKey = {
         "d": d,

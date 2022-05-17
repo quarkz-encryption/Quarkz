@@ -23,6 +23,8 @@ def encrypt(message: str, publicKey: dict) -> quarkz.dtypes.Encrypted:
     assert(type(message) == str)
 
     message = utils.convert_to_int(message)
+    
+    print ("m: ", message)
 
     m = Decimal(message)
 
@@ -37,11 +39,17 @@ def encrypt(message: str, publicKey: dict) -> quarkz.dtypes.Encrypted:
     # modular exponentiation trick to speed this up.
     count = Decimal(int(s) // int(publicKey["o"]))
 
-    #print (count)
+    print ("count: ", count)
+
+    count2 = Decimal(int(m) // int(publicKey["o"]))
+
+    print ("count2: ", count2**publicKey["e"])
 
     #print(sys.getsizeof(count))
 
     offsetCount = Decimal(count) % Decimal(publicKey["ratio"])
+
+    print ("counter: ", offsetCount)
 
     ciphertext = Decimal(pow(m, publicKey["e"], publicKey["o"]))
 
@@ -64,7 +72,7 @@ def decrypt(encrypted: quarkz.dtypes.Encrypted, keypair: quarkz.dtypes.KeyPair) 
 
     plaintext = pow(ciphertext, int(privateKey["d"]), int(privateKey["n"]))
 
-    #print (plaintext)
+    print (plaintext)
     
     if plaintext:
         return utils.convert_to_str(plaintext)
