@@ -50,7 +50,7 @@ def createKey(keysize: int = 256):
     #print(n)
     phi = Decimal((p-1)*(q-1))
     while True:
-        e = Decimal(number.getPrime(4))
+        e = Decimal(number.getPrime(6))
         r = gcd(int(e), int(phi))
         if r == 1:
             t = Decimal(random.getrandbits(4))
@@ -62,25 +62,30 @@ def createKey(keysize: int = 256):
     print (e)
 
     #print ("osize: ", sys.getsizeof(o)*8)
+
+    x = Decimal(random.getrandbits(256))
+
+    y = Decimal(random.getrandbits(64))
+
     diff = (abs(n-Decimal(o))) % n
+
+    n2 = n*(diff*x)
+
+    diff2 = (abs(n2-Decimal(o))) % n2
 
     #print (o)
 
     #print(n)
 
-    x = Decimal(random.getrandbits(1024))
-
-    y = Decimal(random.getrandbits(256))
-
     if diff > 0:
-        ratio = ((n*(diff*x))//(diff*y))
+        ratio = ((n2*(diff2*y))//(diff2))
         #ratio = ((n/diff)%1)+1
         #print ("ratio: ", sys.getsizeof(round(ratio))*8)
     else:
         u = random.randint(0, 1000)
         o -= u
         diff = abs(n-o) % n
-        ratio = ((n*(diff*x))//(diff*y))
+        ratio = ((n2*(diff2*y))//(diff2))
 
     print ("ratio: ", ratio)
 

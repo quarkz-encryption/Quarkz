@@ -39,19 +39,15 @@ def encrypt(message: str, publicKey: dict) -> quarkz.dtypes.Encrypted:
     # modular exponentiation trick to speed this up.
     count = Decimal(int(s) // int(publicKey["o"]))
 
-    print ("count: ", count)
-
-    count2 = Decimal(int(m) // int(publicKey["o"]))
-
-    print ("count2: ", count2**publicKey["e"])
-
-    #print(sys.getsizeof(count))
+    print("count: ", count)
 
     offsetCount = Decimal(count) % Decimal(publicKey["ratio"])
 
-    print ("counter: ", offsetCount)
+    print ("offset: ", offsetCount)
 
     ciphertext = Decimal(pow(m, publicKey["e"], publicKey["o"]))
+
+    print ("ct: ", ciphertext)
 
     data = {"ciphertext": ciphertext, "offsetCount": offsetCount}
 
