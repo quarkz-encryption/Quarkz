@@ -11,6 +11,7 @@ A mathematically beautiful encryption library
 Install the dependencies, then:
 
 ```
+$ pip3 install -r requirements.txt
 $ python3 example.py
 ```
 
