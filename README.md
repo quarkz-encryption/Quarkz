@@ -4,7 +4,9 @@
 
 [![Upload Release](https://github.com/quarkz-encryption/Quarkz/actions/workflows/python-publish.yml/badge.svg)](https://github.com/quarkz-encryption/Quarkz/actions/workflows/python-publish.yml)
 
-A mathematically beautiful encryption library
+## Documentation
+
+Check out our Documentation that explains how the algorithm works in depth while making references to the code: [Documentation](https://docs.google.com/document/d/1lkPAdd-AOcos1G1m9SIPzCQeUe4DH5eviVi7iuLOt2s/edit?usp=sharing 'Documentation')
 
 ## Example
 
@@ -35,7 +37,7 @@ print(key_pair) # --> <quarkz.dtypes.KeyPair object at 0x7f430c33b1c0>
 Then, encrypt some data. Note you'll need your public key:
 
 ```python
-from quarkz.rsa import encrypt
+from quarkz.quarkz import encrypt
 
 pub_key = key_pair.get_public_key()
 
@@ -48,7 +50,7 @@ print(encrypted_data) # --> <quarkz.dtypes.Encrypted object at 0x7f430c33b1c0>
 To decrypt you simply need your keypair created earlier:
 
 ```python
-from quarkz.rsa import decrypt
+from quarkz.quarkz import decrypt
 
 decrypted_data = decrypt(encrypted_data, key_pair)
 print(decrypted_data) # --> "some string"
