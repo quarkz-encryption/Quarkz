@@ -1,17 +1,17 @@
 from decimal import Decimal
 
 class Encrypted(dict):
-    def __init__(self, ciphertext: Decimal, offsetCount: Decimal):
+    def __init__(self, ciphertext: Decimal, offset: Decimal):
         ''' All values are read only '''
         self._ciphertext = ciphertext
-        self._offsetCount = offsetCount
+        self._offset = offset
 
     def __str__(self):
-        return f"quarkz.Encryption object @ {self._offsetCount}"
+        return f"quarkz.Encryption object @ {self._offset}"
     
     @property
     def __dict__(self):
-        return {"ciphertext": self._ciphertext, "offset": self._offsetCount}
+        return {"ciphertext": self._ciphertext, "offset": self._offset}
 
 
 class KeyPair():

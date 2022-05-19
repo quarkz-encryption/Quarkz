@@ -1,5 +1,5 @@
 from quarkz.utils import createKey 
-from quarkz.rsa import encrypt, decrypt
+from quarkz.quarkz import encrypt, decrypt
 from decimal import Decimal
 import time, sys, decimal
 

@@ -1,4 +1,4 @@
-from quarkz.rsa import encrypt, decrypt
+from quarkz.quarkz import encrypt, decrypt
 from quarkz.utils import createKey
 
 def test_create_key():
