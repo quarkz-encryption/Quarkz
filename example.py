@@ -13,7 +13,7 @@ if __name__ == "__main__":
     message = input("This is a test: ")
     print ("message to be encrypted: ", message)
     start = time.time()
-    key = createKey(keysize=1024)
+    key = createKey(keysize=512)
     pub = key.get_public_key()
     end = time.time()
     createtime.append(end-start) 

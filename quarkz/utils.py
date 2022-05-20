@@ -54,7 +54,7 @@ def createKey(keysize: int = 256):
     phi = Decimal((p-1)*(q-1))
     while True:
         # 1.2.3   Generating e Using phi(n) (Public Key)
-        e = Decimal(number.getPrime(6))
+        e = 65537
         r = gcd(int(e), int(phi))
         if r == 1:
             t = Decimal(random.getrandbits(4))
