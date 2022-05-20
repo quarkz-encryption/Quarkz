@@ -42,13 +42,21 @@ def encrypt(message: str, publicKey: dict) -> quarkz.dtypes.Encrypted:
     # 1.3.3   Finding the count: how many times o goes into m**e
     count = Decimal(int(s) // int(publicKey["o"]))
 
+    print ("count: ", count)
+
     # 1.3.4   Generating offset from count and ratio
     offset = Decimal(count) % Decimal(publicKey["ratio"])
+
+    print ("ratio: ", publicKey["ratio"])
+
+    print ("offset: ", offset)
 
     # 1.3.5   Generating the Ciphertext Using m and e
     ciphertext = Decimal(pow(m, publicKey["e"], publicKey["o"]))
 
     print ("cipertext: ", ciphertext)
+
+    print ("size: ", count//publicKey["ratio"])
 
     # 1.3.6   Completed Ciphertext to be Sent To Private Key Holder
     data = {"ciphertext": ciphertext, "offset": offset}

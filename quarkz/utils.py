@@ -59,7 +59,7 @@ def createKey(keysize: int = 256):
         if r == 1:
             t = Decimal(random.getrandbits(4))
             # 1.2.4   Generating o From e (Public Key)
-            o = e**t
+            o = 1
             break
 
     # 1.2.5   Generating d using e and n (Private Key)
